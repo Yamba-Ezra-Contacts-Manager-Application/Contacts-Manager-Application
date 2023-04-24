@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.Collections;
 
 public class Contact {
     private static final String directory = "data";
@@ -16,7 +17,6 @@ public class Contact {
     private String phoneNumber;
 
     public Contact(){
-
     }
 
     public Contact(String name, String phoneNumber) {
@@ -113,14 +113,27 @@ public class Contact {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the name of the contact: ");
         String name = scanner.nextLine();
-        System.out.print("Enter the phone number of the contact: ");
-        String phoneNumber = scanner.nextLine();
-
-        Contact contact = new Contact(name, phoneNumber);
-        List<Contact> contacts = readContactsFromFile();
-        contacts.add(contact);
-        writeContactsToFile(contacts);
-        System.out.println("Contact added successfully.");
+        if (searchDuplicateContact(name)){
+            System.out.printf("There's already a contact named %s. Do you want to overwrite it? (Yes/No)\n",name);
+            String userConfirm = scanner.nextLine();
+            if (userConfirm.equalsIgnoreCase("Yes") || userConfirm.equalsIgnoreCase("y")){
+                System.out.print("Enter the phone number of the contact: ");
+                String phoneNumber = scanner.nextLine();
+                List<Contact> contacts = readContactsFromFile();
+                List<Contact> newContacts = new ArrayList<>();
+                for (Contact con: contacts){
+                    if (!con.getName().equalsIgnoreCase(name.trim())){
+                        newContacts.add(con);
+                    }
+                }
+                Contact contact = new Contact(name, phoneNumFormatted(phoneNumber));
+                newContacts.add(contact);
+                writeContactsToFile(newContacts);
+                System.out.println("Contact added successfully.");
+            } else {
+                runContactApp();
+            }
+        }
     }
     //Search a contact by name
     private static void searchContact() throws IOException {
@@ -141,6 +154,18 @@ public class Contact {
         if (!found) {
             System.out.println("Contact not found.");
         }
+    }
+    //Search for a duplicate name return true/false
+    private static boolean searchDuplicateContact(String name) throws IOException {
+        List<Contact> contacts = readContactsFromFile();
+        boolean found = false;
+        for (Contact contact : contacts) {
+            if (contact.getName().equalsIgnoreCase(name.trim())) {
+                found = true;
+                break;
+            }
+        }
+        return found;
     }
     //Delete a contact from the contact file
     private static void deleteContact() throws IOException {
