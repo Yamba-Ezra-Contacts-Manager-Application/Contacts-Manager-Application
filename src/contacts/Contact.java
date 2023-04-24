@@ -174,12 +174,27 @@ public class Contact {
                 if (parts.length == 2) {
                     String name = parts[0].trim();
                     String phoneNumber = parts[1].trim();
-                    Contact contact = new Contact(name, phoneNumber);
+                    Contact contact = new Contact(name, phoneNumFormatted(phoneNumber));
                     contacts.add(contact);
                 }
             }
         }
         return contacts;
+    }
+
+    public static String phoneNumFormatted (String phoneNum){
+        if (phoneNum.length() == 10) {
+            String phoneNum1 = phoneNum.substring(0, 3);
+            String phoneNum2 = phoneNum.substring(3, 6);
+            String phoneNum3 = phoneNum.substring(6, 10);
+            return phoneNum1 + "-" + phoneNum2 + "-" + phoneNum3;
+        } else if (phoneNum.length() == 7) {
+            String phoneNum1 = phoneNum.substring(0, 3);
+            String phoneNum2 = phoneNum.substring(3, 7);
+            return phoneNum1 + "-" + phoneNum2;
+        } else {
+            return phoneNum;
+        }
     }
 
     private static void writeContactsToFile(List<Contact> contacts) throws IOException {
