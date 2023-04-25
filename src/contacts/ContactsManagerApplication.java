@@ -58,7 +58,6 @@ public class ContactsManagerApplication extends UtilMethod{
         createFile();
        runContactApp();
 
-
     }
 
 }
