@@ -46,14 +46,25 @@ public class UtilMethod {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter the name of the contact: ");
         String name = scanner.nextLine();
-        System.out.print("Enter the phone number of the contact: ");
+        System.out.print("Enter the 7 or 10 digit phone number of the contact: (no spaces)");
         String phoneNumber = scanner.nextLine();
+        boolean confirm = true;
+        do {
+            if (phoneNumber.length() == 7 || phoneNumber.length() == 10){
+                confirm = false;
+            }else{
+                System.out.print("Enter the 7 or 10 digit phone number of the contact: (no spaces)");
+                phoneNumber = scanner.nextLine();
+            }
+        } while (confirm);
 
         Contact contact = new Contact(name, phoneNumber);
         List<Contact> contacts = readContactsFromFile();
         contacts.add(contact);
         writeContactsToFile(contacts);
-        System.out.println("Contact added successfully.");
+        System.out.println("+------------------------------+");
+        System.out.printf("Contact '%s' added successfully.%n", name);
+        System.out.println("+------------------------------+");
     }
 
     //Search a contact by name
@@ -65,9 +76,11 @@ public class UtilMethod {
         boolean found = false;
         for (Contact contact : contacts) {
             if (contact.getName().equalsIgnoreCase(searchName)) {
+                System.out.println("+------------------------------+");
                 System.out.println("Contact found:");
                 System.out.println("Name: " + contact.getName());
                 System.out.println("Phone number: " + contact.getPhoneNumber());
+                System.out.println("+------------------------------+");
                 found = true;
                 break;
             }
@@ -80,7 +93,7 @@ public class UtilMethod {
     //Delete a contact from the contact file
     static void deleteContact() throws IOException {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the name of the contact to delete ");
+        System.out.print("Enter the name of the contact to delete: ");
         String deleteName = scanner.nextLine();
         List<Contact> contacts = readContactsFromFile();
         boolean found = false;
@@ -89,7 +102,9 @@ public class UtilMethod {
             if (contact.getName().equalsIgnoreCase(deleteName)) {
                 iterator.remove();
                 found = true;
+                System.out.println("+------------------------------+");
                 System.out.println("Contact deleted successfully.");
+                System.out.println("+------------------------------+");
                 break;
             }
         }
